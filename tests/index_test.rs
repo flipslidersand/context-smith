@@ -563,7 +563,6 @@ end
 /// higher than a file whose path does not match, even if both contain the keyword.
 #[test]
 fn bm25_path_weight_boosts_matching_filename() {
-    use context_smith::index_builder::build_index;
     use context_smith::search_index::search_bm25;
 
     let (_tmp, db) = build_index_for(&[
