@@ -508,8 +508,14 @@ pub type Result<T> = std::result::Result<T, String>;
     assert!(names.contains(&"Result"), "expected type alias Result");
 
     let kinds: Vec<&SymbolKind> = syms.iter().map(|(_, k, _)| k).collect();
-    assert!(kinds.contains(&&SymbolKind::Struct), "enum/type should be Struct kind");
-    assert!(kinds.contains(&&SymbolKind::Class), "trait should be Class kind");
+    assert!(
+        kinds.contains(&&SymbolKind::Struct),
+        "enum/type should be Struct kind"
+    );
+    assert!(
+        kinds.contains(&&SymbolKind::Class),
+        "trait should be Class kind"
+    );
 }
 
 /// Ruby: method, class, module, and require are extracted correctly.
@@ -541,8 +547,14 @@ end
     assert!(names.contains(&"parse"), "expected method parse");
 
     let kinds: Vec<&SymbolKind> = syms.iter().map(|(_, k, _)| k).collect();
-    assert!(kinds.contains(&&SymbolKind::Import), "expected require as Import");
+    assert!(
+        kinds.contains(&&SymbolKind::Import),
+        "expected require as Import"
+    );
     assert!(kinds.contains(&&SymbolKind::Class));
-    assert!(kinds.contains(&&SymbolKind::Struct), "module should be Struct kind");
+    assert!(
+        kinds.contains(&&SymbolKind::Struct),
+        "module should be Struct kind"
+    );
     assert!(kinds.contains(&&SymbolKind::Function));
 }
