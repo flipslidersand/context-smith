@@ -42,10 +42,8 @@ pub fn vec_to_blob(v: &[f32]) -> Vec<u8> {
 
 /// Deserialize a little-endian f32 BLOB back into a vector.
 pub fn blob_to_vec(b: &[u8]) -> Vec<f32> {
-    b.as_chunks::<4>()
-        .0
-        .iter()
-        .map(|&c| f32::from_le_bytes(c))
+    b.chunks_exact(4)
+        .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
         .collect()
 }
 
