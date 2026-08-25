@@ -332,16 +332,14 @@ fn query_neighbors(conn: &Connection, file_id: i64) -> Result<Vec<i64>> {
     let mut neighbors: HashSet<i64> = HashSet::new();
 
     // Outgoing: file_id → X
-    let mut stmt =
-        conn.prepare_cached("SELECT to_file FROM deps WHERE from_file = ?1")?;
+    let mut stmt = conn.prepare_cached("SELECT to_file FROM deps WHERE from_file = ?1")?;
     let out: Vec<i64> = stmt
         .query_map(params![file_id], |row| row.get::<_, i64>(0))?
         .collect::<rusqlite::Result<Vec<_>>>()?;
     neighbors.extend(out);
 
     // Incoming: X → file_id
-    let mut stmt =
-        conn.prepare_cached("SELECT from_file FROM deps WHERE to_file = ?1")?;
+    let mut stmt = conn.prepare_cached("SELECT from_file FROM deps WHERE to_file = ?1")?;
     let inc: Vec<i64> = stmt
         .query_map(params![file_id], |row| row.get::<_, i64>(0))?
         .collect::<rusqlite::Result<Vec<_>>>()?;
