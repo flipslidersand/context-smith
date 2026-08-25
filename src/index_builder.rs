@@ -161,14 +161,22 @@ impl IndexDb {
 
     /// Delete all index records for a file (FTS, symbols, deps, files row).
     fn delete_file_records(&self, file_id: i64) -> Result<()> {
-        self.conn
-            .execute("DELETE FROM fts_path    WHERE file_id = ?1", params![file_id])?;
-        self.conn
-            .execute("DELETE FROM fts_symbols WHERE file_id = ?1", params![file_id])?;
-        self.conn
-            .execute("DELETE FROM fts_body    WHERE file_id = ?1", params![file_id])?;
-        self.conn
-            .execute("DELETE FROM symbols     WHERE file_id = ?1", params![file_id])?;
+        self.conn.execute(
+            "DELETE FROM fts_path    WHERE file_id = ?1",
+            params![file_id],
+        )?;
+        self.conn.execute(
+            "DELETE FROM fts_symbols WHERE file_id = ?1",
+            params![file_id],
+        )?;
+        self.conn.execute(
+            "DELETE FROM fts_body    WHERE file_id = ?1",
+            params![file_id],
+        )?;
+        self.conn.execute(
+            "DELETE FROM symbols     WHERE file_id = ?1",
+            params![file_id],
+        )?;
         self.conn.execute(
             "DELETE FROM deps WHERE from_file = ?1 OR to_file = ?1",
             params![file_id],
@@ -187,11 +195,11 @@ impl IndexDb {
 
     /// Return all (file_id, path) pairs currently in the DB.
     fn all_file_ids_and_paths(&self) -> Result<Vec<(i64, String)>> {
-        let mut stmt = self
-            .conn
-            .prepare("SELECT id, path FROM files")?;
+        let mut stmt = self.conn.prepare("SELECT id, path FROM files")?;
         let rows = stmt
-            .query_map([], |row| Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?)))?
+            .query_map([], |row| {
+                Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?))
+            })?
             .collect::<rusqlite::Result<Vec<_>>>()?;
         Ok(rows)
     }
@@ -281,10 +289,8 @@ pub fn build_index(repo: &GitRepo, db: &IndexDb, force: bool) -> Result<IndexSta
             }
 
             // (c) Replace FTS rows for this file.
-            db.connection().execute(
-                "DELETE FROM fts_path WHERE file_id = ?1",
-                params![file_id],
-            )?;
+            db.connection()
+                .execute("DELETE FROM fts_path WHERE file_id = ?1", params![file_id])?;
             let tokenized_path = crate::tokenizer::tokenize_path(&rel_path.to_string_lossy());
             db.connection().execute(
                 "INSERT INTO fts_path (file_id, path) VALUES (?1, ?2)",
@@ -296,9 +302,9 @@ pub fn build_index(repo: &GitRepo, db: &IndexDb, force: bool) -> Result<IndexSta
                 params![file_id],
             )?;
             {
-                let mut sym_stmt = db.connection().prepare(
-                    "SELECT name FROM symbols WHERE file_id = ?1 AND kind != 'import'",
-                )?;
+                let mut sym_stmt = db
+                    .connection()
+                    .prepare("SELECT name FROM symbols WHERE file_id = ?1 AND kind != 'import'")?;
                 let sym_names: Vec<String> = sym_stmt
                     .query_map(params![file_id], |row| row.get(0))?
                     .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -310,10 +316,8 @@ pub fn build_index(repo: &GitRepo, db: &IndexDb, force: bool) -> Result<IndexSta
                 }
             }
 
-            db.connection().execute(
-                "DELETE FROM fts_body WHERE file_id = ?1",
-                params![file_id],
-            )?;
+            db.connection()
+                .execute("DELETE FROM fts_body WHERE file_id = ?1", params![file_id])?;
             let truncated = if source.len() > 512 * 1024 {
                 let mut end = 512 * 1024;
                 while !source.is_char_boundary(end) {
@@ -366,10 +370,10 @@ pub fn build_index(repo: &GitRepo, db: &IndexDb, force: bool) -> Result<IndexSta
 
 #[derive(Debug, Default)]
 pub struct IndexStats {
-    pub files_total:   usize,
-    pub files_indexed: usize,  // SHA changed → re-indexed
-    pub files_skipped: usize,  // SHA unchanged → skipped
-    pub files_deleted: usize,  // removed from git → cleaned from DB
+    pub files_total: usize,
+    pub files_indexed: usize, // SHA changed → re-indexed
+    pub files_skipped: usize, // SHA unchanged → skipped
+    pub files_deleted: usize, // removed from git → cleaned from DB
     pub symbols_total: usize,
-    pub deps_total:    usize,
+    pub deps_total: usize,
 }
