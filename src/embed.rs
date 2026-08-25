@@ -332,8 +332,7 @@ impl Embedder for RemoteEmbedder {
                     Ok(r) => match r.into_json::<EmbedResponse>() {
                         Ok(parsed) => break parsed,
                         Err(e) => {
-                            last_err =
-                                anyhow::anyhow!("embedding response decode failed: {e}");
+                            last_err = anyhow::anyhow!("embedding response decode failed: {e}");
                         }
                     },
                     Err(e) => {
