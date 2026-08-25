@@ -188,7 +188,10 @@ mod tests {
 
         let rc = out.join("relevant-code");
         // Expected slugs: src_lib_rs, src_lib_rs_0, src_lib_rs_1 (no gap at _0).
-        assert!(rc.join("src_lib_rs.md").exists(), "first file uses base slug");
+        assert!(
+            rc.join("src_lib_rs.md").exists(),
+            "first file uses base slug"
+        );
         assert!(
             rc.join("src_lib_rs_0.md").exists(),
             "first collision must use _0 suffix, not _1"
