@@ -130,7 +130,14 @@ pub fn search_bm25(conn: &Connection, query: &str, top_n: usize) -> Result<Vec<(
     )?;
     let rows: Vec<(i64, f32)> = stmt
         .query_map(
-            params![W_PATH, W_SYMBOLS, W_BODY, sanitized, sub_limit, top_n as i64],
+            params![
+                W_PATH,
+                W_SYMBOLS,
+                W_BODY,
+                sanitized,
+                sub_limit,
+                top_n as i64
+            ],
             |row| Ok((row.get::<_, i64>(0)?, row.get::<_, f64>(1)? as f32)),
         )?
         .collect::<rusqlite::Result<Vec<_>>>()?;
