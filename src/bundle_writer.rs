@@ -93,7 +93,13 @@ pub fn write_bundle(
             .path
             .to_string_lossy()
             .chars()
-            .map(|ch| if ch.is_alphanumeric() || ch == '-' { ch } else { '_' })
+            .map(|ch| {
+                if ch.is_alphanumeric() || ch == '-' {
+                    ch
+                } else {
+                    '_'
+                }
+            })
             .collect();
         let count = slug_counts.entry(base_slug.clone()).or_insert(0);
         let slug = make_slug(&base_slug, *count);
@@ -247,7 +253,8 @@ mod tests {
         // All chars in the stem (before .md) must be alphanumeric, '-', or '_'.
         let stem = name.trim_end_matches(".md");
         assert!(
-            stem.chars().all(|c| c.is_alphanumeric() || c == '-' || c == '_'),
+            stem.chars()
+                .all(|c| c.is_alphanumeric() || c == '-' || c == '_'),
             "slug contains unexpected char: {name:?}"
         );
     }
