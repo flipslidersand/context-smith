@@ -170,9 +170,8 @@ fn select_candidates(
         for file_id in scored_ids {
             let score = scored[&file_id];
             let rel_path: String = {
-                let mut stmt = conn.prepare_cached(
-                    "SELECT path FROM files WHERE id = ?1 AND lang != 'unknown'",
-                )?;
+                let mut stmt = conn
+                    .prepare_cached("SELECT path FROM files WHERE id = ?1 AND lang != 'unknown'")?;
                 match stmt.query_row([file_id], |row| row.get(0)) {
                     Ok(p) => p,
                     Err(_) => continue,
