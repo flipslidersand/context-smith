@@ -184,8 +184,8 @@ mod tests {
         let selected = vec![cand("src/attack.rs", 0.9, malicious_content)];
         write_bundle("task", 10000, &selected, "", &out, false).unwrap();
 
-        let md = std::fs::read_to_string(out.join("relevant-code").join("src_attack_rs.md"))
-            .unwrap();
+        let md =
+            std::fs::read_to_string(out.join("relevant-code").join("src_attack_rs.md")).unwrap();
         // The fence must use ≥4 backticks because the content has ```.
         assert!(
             md.starts_with("<!-- src/attack.rs -->\n````"),
