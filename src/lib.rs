@@ -126,8 +126,7 @@ impl GitRepo {
         } else {
             Some(ancestor.tree()?)
         };
-        let diff =
-            repo.diff_tree_to_tree(anc_tree_opt.as_ref(), Some(&head_tree), None)?;
+        let diff = repo.diff_tree_to_tree(anc_tree_opt.as_ref(), Some(&head_tree), None)?;
 
         let mut patch = String::new();
         let mut truncated = false;
