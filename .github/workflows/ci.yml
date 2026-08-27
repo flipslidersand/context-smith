@@ -104,7 +104,6 @@ jobs:
         run: >
           cargo llvm-cov
           --lib
-          --include-only "src/lib.rs"
           --lcov --output-path lcov.info
           --fail-under-lines 75
 
