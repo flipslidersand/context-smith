@@ -83,8 +83,12 @@ pub struct GitRepo {
 impl GitRepo {
     pub fn new(path: impl AsRef<Path>) -> Result<Self> {
         let path = path.as_ref();
-        path.canonicalize()
-            .with_context(|| format!("--repo '{}' does not exist or is not accessible", path.display()))?;
+        path.canonicalize().with_context(|| {
+            format!(
+                "--repo '{}' does not exist or is not accessible",
+                path.display()
+            )
+        })?;
         let repo = git2::Repository::open(path)
             .with_context(|| format!("'{}' is not a git repository", path.display()))?;
         // Prefer repo.workdir() so the stored root matches git's own logical
@@ -92,7 +96,12 @@ impl GitRepo {
         // (e.g. network mounts where canonicalize may fail or resolve differently).
         let root = repo
             .workdir()
-            .with_context(|| format!("'{}' is a bare repository (no working directory)", path.display()))?
+            .with_context(|| {
+                format!(
+                    "'{}' is a bare repository (no working directory)",
+                    path.display()
+                )
+            })?
             .to_path_buf();
         Ok(GitRepo { root })
     }
