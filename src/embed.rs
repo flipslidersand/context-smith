@@ -290,7 +290,9 @@ impl RemoteEmbedder {
             .unwrap_or(DEFAULT_READ_TIMEOUT_SECS);
         Some(RemoteEmbedder {
             url: url.trim_end_matches('/').to_string(),
-            api_key: std::env::var("EMBEDDING_API_KEY").ok().map(zeroize::Zeroizing::new),
+            api_key: std::env::var("EMBEDDING_API_KEY")
+                .ok()
+                .map(zeroize::Zeroizing::new),
             collection: std::env::var("EMBEDDING_COLLECTION")
                 .unwrap_or_else(|_| "context-smith".to_string()),
             timeout: std::time::Duration::from_secs(timeout_secs),
