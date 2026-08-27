@@ -105,7 +105,9 @@ pub fn search_bm25(conn: &Connection, query: &str, top_n: usize) -> Result<Vec<(
     let sanitized = sanitize_fts_query(query);
     // Guard: an empty MATCH expression is a SQLite FTS5 syntax error.
     if sanitized.trim().is_empty() {
-        bail!("task string is empty or contains only punctuation — please provide at least one word");
+        bail!(
+            "task string is empty or contains only punctuation — please provide at least one word"
+        );
     }
 
     // Each sub-query: normalize raw BM25 rank to [0,1] then apply the weight.
