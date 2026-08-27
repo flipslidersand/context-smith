@@ -486,7 +486,6 @@ mod tests {
 
     #[test]
     fn populate_embeddings_skips_unchanged_files() {
-        use std::io::Write;
         // Write two temp files so populate_embeddings can read them.
         let dir = tempfile::tempdir().unwrap();
         let path_a = dir.path().join("a.rs");
