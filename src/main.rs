@@ -12,7 +12,9 @@ fn non_empty_string(s: &str) -> Result<String, String> {
 
 /// Clap value_parser: reject zero budget with a clear error message.
 fn positive_usize(s: &str) -> Result<usize, String> {
-    let v: usize = s.parse().map_err(|_| format!("'{}' is not a valid integer", s))?;
+    let v: usize = s
+        .parse()
+        .map_err(|_| format!("'{}' is not a valid integer", s))?;
     if v == 0 {
         Err("--budget must be \u{2265} 1".to_owned())
     } else {
