@@ -195,25 +195,43 @@ mod tests {
     fn sanitize_downcases_fts5_boolean_keywords() {
         // AND/OR/NOT/NEAR must be lowercased so FTS5 treats them as plain terms
         let result = sanitize_fts_query("authentication OR 1=1");
-        assert!(!result.contains("OR"), "OR should be downcased, got: {result}");
-        assert!(result.contains("or"), "OR should become 'or', got: {result}");
+        assert!(
+            !result.contains("OR"),
+            "OR should be downcased, got: {result}"
+        );
+        assert!(
+            result.contains("or"),
+            "OR should become 'or', got: {result}"
+        );
 
         let result = sanitize_fts_query("foo AND bar");
-        assert!(!result.contains("AND"), "AND should be downcased, got: {result}");
+        assert!(
+            !result.contains("AND"),
+            "AND should be downcased, got: {result}"
+        );
 
         let result = sanitize_fts_query("foo NOT bar");
-        assert!(!result.contains("NOT"), "NOT should be downcased, got: {result}");
+        assert!(
+            !result.contains("NOT"),
+            "NOT should be downcased, got: {result}"
+        );
 
         let result = sanitize_fts_query("NEAR(foo bar)");
         // parens are stripped, NEAR is lowercased
-        assert!(!result.contains("NEAR"), "NEAR should be downcased, got: {result}");
+        assert!(
+            !result.contains("NEAR"),
+            "NEAR should be downcased, got: {result}"
+        );
     }
 
     #[test]
     fn sanitize_preserves_mixed_case_non_keywords() {
         // Words that are not exactly AND/OR/NOT/NEAR should survive unchanged
         let result = sanitize_fts_query("And Oregon Notify");
-        assert!(result.contains("And"), "mixed-case 'And' should be preserved, got: {result}");
+        assert!(
+            result.contains("And"),
+            "mixed-case 'And' should be preserved, got: {result}"
+        );
         assert!(result.contains("Oregon"), "got: {result}");
         assert!(result.contains("Notify"), "got: {result}");
     }
