@@ -112,3 +112,6 @@ jobs:
         with:
           name: lcov
           path: lcov.info
+
+  reviewdog:
+    uses: flipslidersand-labs/qa-workflows/.github/workflows/reviewdog-rust.yml@main
