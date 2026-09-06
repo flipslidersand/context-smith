@@ -523,3 +523,11 @@ fn collect_ruby_node(
         }
     }
 }
+
+#[cfg(test)]
+mod issue_778_verification {
+    #[test]
+    fn intentional_failure_for_branch_protection_check() {
+        assert!(false, "intentional failure for issue 778 branch protection verification");
+    }
+}
