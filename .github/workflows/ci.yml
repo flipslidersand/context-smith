@@ -114,4 +114,8 @@ jobs:
           path: lcov.info
 
   reviewdog:
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
     uses: flipslidersand-labs/qa-workflows/.github/workflows/reviewdog-rust.yml@main
